@@ -1,0 +1,20 @@
+{% extends 'layouts/base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}Вход{% endblock %}
+{% block page_header %}Вход{% endblock %}
+
+{% block content %}
+    <div class="site-form bg-white shadow rounded pb-2 px-4 pt-4 mt-4">
+        <form action="{% url 'accounts:login' %}" method="post">
+            {% csrf_token %}
+            {% bootstrap_form user_form %}
+            {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}"/>
+            {% endif %}
+            {% buttons %}
+            <input class="btn btn-primary" type="submit" value="Войти">
+            {% endbuttons %}
+        </form>
+    </div>
+{% endblock %}

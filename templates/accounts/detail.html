@@ -1,0 +1,52 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Просмотр профиля «{{ profile.fio_name }}»{% endblock %}
+{% block page_header %}Просмотр профиля «{{ profile.fio_name }}»{% endblock %}
+
+{% block content %}
+    <div class="profile bg-white shadow rounded p-4 mt-4">
+    {% if not profile.user %}
+        <div class="font-weight-bold">Пользователь был удален</div>
+    {% else %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card-profile">
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 text-center">
+                                <img src="{% if profile.photo %} {{ profile.photo.url }} {% else %} {{ default_avatar_path }} {% endif %}" alt="avatar" class="img-thumbnail">
+                            </div>
+                            <div class="col-md-8 col-sm-8 pt-sm-8-2">
+                                <p class="card-title"><strong>ФИО: </strong>{{ profile.fio_name }}</p>
+                                <p class="card-text"><strong>Пол: </strong>{{ profile.get_gender_display }}</p>
+                                <p class="card-text"><strong>Роль: </strong>{% if profile.user.is_superuser %}Администратор{% else %}Редактор{% endif %}</p>
+                                <div class="profile-buttons">
+                                {% if user.is_superuser or user == profile.user %}
+                                    {% if user.is_superuser and profile.user.is_superuser %}
+                                    <form class="d-inline-block" action="{% url 'accounts:delete_privileges' profile.id %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="submit" class="btn btn-dark" value="Понизить до редактора"/>
+                                    </form>
+                                    {% elif user.is_superuser and not profile.user.is_superuser %}
+                                        <form class="d-inline-block" action="{% url 'accounts:give_privileges' profile.id %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="submit" class="btn btn-dark" value="Повысить до администратора"/>
+                                    </form>
+                                    {% endif %}
+                                    <a class="btn btn-primary d-inline-block" href="{% url 'accounts:edit' profile.id %}">Редактировать</a>
+                                    <a class="btn btn-warning d-inline-block" href="{% url 'accounts:change_password' profile.id %}">Сменить пароль</a>
+                                    <form class="d-inline-block" action="{% url 'accounts:delete' profile.id %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="submit" class="btn btn-danger" value="Удалить"/>
+                                    </form>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    </div>
+{% endblock %}

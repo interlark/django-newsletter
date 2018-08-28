@@ -1,0 +1,48 @@
+{% load bootstrap4 %}
+{% load humanize %}
+
+{% if user.is_authenticated or not user.is_authenticated and comments %}
+<div class="comments pb-5">
+    <h1 class="my-5 text-uppercase">Комментарии</h1>
+
+    {% for comment in comments %}
+        <div class="card bg-white shadow rounded mt-4">
+            {% if user.is_authenticated %}
+                {% if user == comment.author.user or user.is_superuser %}
+                    <form action="{% url 'news:delete_comment' article.slug comment.id %}" method="post">
+                        {% csrf_token %}
+                        <button class="close" type="submit">×</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <img src="{% if comment.author.photo %} {{ comment.author.photo.url }} {% else %} {{ default_avatar_path }} {% endif %}" class="img img-rounded img-fluid"/>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="float-left">
+                            <a class="d-inline-block" href="{% url 'accounts:detail' comment.author.id %}"><strong>{{ comment.author.fio_name }}</strong></a>
+                          <div class="d-inline-block text-muted small">{{ comment.date | naturaltime }}</div>
+                       </div>
+                       <div class="clearfix"></div>
+                        <p class="pt-2">{{ comment.message | linebreaks }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    {% if user.is_authenticated and comment_form %}
+        <div class="bg-white shadow rounded pb-2 px-4 pt-4 mt-4">
+            <form action="{% url 'news:create_comment' article.slug %}" method="post" >
+                {% csrf_token %}
+                {% bootstrap_form comment_form %}
+                {% buttons %}
+                <input class="btn btn-primary" type="submit" value="Отправить"/>
+                {% endbuttons %}
+            </form>
+        </div>
+    {% endif %}
+</div>
+{% endif %}

@@ -1,0 +1,49 @@
+/* Убираем фокус на кнопках в меню */
+.dropdown-menu button:focus {
+  outline: none;
+}
+
+/* Курсор в выпадающем списке меню*/
+.dropdown-menu .dropdown-item {
+  cursor: pointer;
+}
+
+a, a:hover, a:visited, a:focus {
+    text-decoration:none;
+}
+
+.buttons {
+    padding-right: 10px;
+}
+
+.comments .close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    z-index: 1;
+    outline: none;
+}
+
+.link-muted:hover {
+    color: #000 !important;
+}
+
+.link-muted {
+    color: #6c757d !important;
+}
+
+@media (max-width: 576px) {
+  .pt-sm-8-2 {
+    padding-top:10px;
+  }
+}
+
+.profile-buttons {
+    position: absolute;
+    bottom: 0px;
+    right: 15px;
+}
+
+.profile-buttons a, .profile-buttons form {
+    margin-left: 10px;
+}

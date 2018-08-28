@@ -1,0 +1,21 @@
+{% extends 'layouts/base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}Регистрация{% endblock %}
+{% block page_header %}Регистрация{% endblock %}
+
+{% block content %}
+    <div class="site-form bg-white shadow rounded pb-2 px-4 pt-4 mt-4">
+        <form class="site-form" action="{% url 'accounts:signup' %}" method="post">
+            {% csrf_token %}
+            {% bootstrap_form user_form %}
+            {% bootstrap_form profile_form %}
+            {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}"/>
+            {% endif %}
+            {% buttons %}
+            <input class="btn btn-primary" type="submit" value="Зарегистрироваться"/>
+            {% endbuttons %}
+        </form>
+    </div>
+{% endblock %}

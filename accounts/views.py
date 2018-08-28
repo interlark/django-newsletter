@@ -58,7 +58,7 @@ def signup(request):
 
 def profile_detail(request, profile_id):
     profile = get_object_or_404(Profile, id=profile_id)
-    context = {'profile': profile, 'default_avatar_path': DEFAULT_AVATAR_PATH, 'transition': True}
+    context = {'profile': profile, 'default_avatar_path': DEFAULT_AVATAR_PATH}
     return render(request, 'accounts/detail.html', context)
 
 

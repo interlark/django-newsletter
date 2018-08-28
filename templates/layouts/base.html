@@ -10,92 +10,125 @@
     <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/script.js' %}"></script>
-    <title>Новостной Портал - {% block title %}{% endblock %}</title>
-    {% if transition %}
-        <style type="text/css">
-            body {
-                display: none;
-            }
-        </style>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $("body").fadeIn(700);
+    <title>НОВОСТНОЙ ПОРТАЛ - {% block title %}{% endblock %}</title>
+    <style type="text/css">
+        body {
+            display: none;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('body').fadeIn(700);
 
-                $("a button").click(function(event){
-                    event.preventDefault();
-                    linkLocation = this.href;
-                    $("body").fadeOut(600, redirectPage);
-                });
-
-                function redirectPage() {
+            $('a button').click(function (event) {
+                event.preventDefault();
+                linkLocation = this.href;
+                $('body').fadeOut(600, function () {
                     window.location = linkLocation;
-                }
+                });
             });
-        </script>
-    {% endif %}
+
+            $('a.expand').click(function (e) {
+                e.preventDefault();
+                $expand_lnk = $(this);
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'news:get_article' %}',
+                    data: {
+                        'slug': $(this).data('slug'),
+                        'skip': $(this).data('skip'),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.is_ok) {
+                            $p = $expand_lnk.parent().find('p');
+                            $p.text(function (_,content) {
+                                return content.slice(0, -1);
+                            });
+                            $p.text(function (_,content) {
+                                return content + data.content;
+                            });
+                            $expand_lnk.remove();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body class="bg-light">
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-  <a class="navbar-brand text-uppercase " href="{% url 'news:list' %}"><i class="fa fa-at fa-fw"></i>Новостной портал</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_сontent" aria-controls="navbar_сontent" aria-expanded="false" aria-label="Переключить">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+    <a class="navbar-brand text-uppercase " href="{% url 'news:list' %}"><i class="fa fa-at fa-fw"></i>Новостной портал</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_сontent"
+            aria-controls="navbar_сontent" aria-expanded="false" aria-label="Переключить">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-  <div class="collapse navbar-collapse" id="navbar_сontent">
-    <ul class="navbar-nav ml-auto">
-      {% if user.is_authenticated %}
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'news:create' %}">
-            <i class="fa fa-pencil"></i>
-            Создать
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="fa fa-newspaper-o"></i>
-            Мои статьи
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'news:search' %}">
-            <i class="fa fa-search"></i>
-            Поиск статьи
-        </a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="profile_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-user"></i>
-            {{ user.username | title }}
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profile_dropdown">
-          <a class="dropdown-item" href="{% url 'accounts:detail' user.profile.id %}"><i class="fa fa-cog fa-fw"></i>Настройки</a>
-          <form action="{% url 'accounts:logout' %}" method="post">
-              {% csrf_token %}
-              <button type="submit" class="dropdown-item"><i class="fa fa-sign-out fa-fw"></i>Выйти</button>
-          </form>
-        </div>
-      </li>
-      {% else %}
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'accounts:signup' %}">
-            <i class="fa fa-user-plus"></i>
-            Зарегистрироваться
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'accounts:login' %}">
-            <i class="fa fa-sign-in"></i>
-            Войти
-        </a>
-      </li>
-      {% endif %}
-    </ul>
-  </div>
+    <div class="collapse navbar-collapse" id="navbar_сontent">
+        <ul class="navbar-nav ml-auto">
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'news:create' %}">
+                        <i class="fa fa-pencil"></i>
+                        Создать
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'news:my' %}">
+                        <i class="fa fa-newspaper-o"></i>
+                        Мои статьи
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'news:search' %}">
+                        <i class="fa fa-search"></i>
+                        Поиск статьи
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profile_dropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-user"></i>
+                        {{ user.username | title }}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profile_dropdown">
+                        <a class="dropdown-item" href="{% url 'accounts:detail' user.profile.id %}"><i
+                                class="fa fa-cog fa-fw"></i>Настройки</a>
+                        <form action="{% url 'accounts:logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item"><i class="fa fa-sign-out fa-fw"></i>Выйти
+                            </button>
+                        </form>
+                    </div>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'news:search' %}">
+                        <i class="fa fa-search"></i>
+                        Поиск статьи
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts:signup' %}">
+                        <i class="fa fa-user-plus"></i>
+                        Зарегистрироваться
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts:login' %}">
+                        <i class="fa fa-sign-in"></i>
+                        Войти
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
 </nav>
 <div class="container">
-<h1 class="my-5 text-uppercase">{% block page_header %}{% endblock %}</h1>
-{% block content %}
-{% endblock %}
+    <h1 class="my-5 text-uppercase">{% block page_header %}{% endblock %}</h1>
+    {% block content %}
+    {% endblock %}
 </div>
 </body>
 </html>

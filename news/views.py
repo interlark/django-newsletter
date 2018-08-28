@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
@@ -10,13 +11,38 @@ from .models import Article, Comment
 from .forms import ArticleForm, CommentForm
 
 
+def get_article_async(request):
+    if request.method == 'POST':
+        if request.is_ajax():
+            slug = request.POST.get('slug')
+            if slug:
+                article = Article.objects.filter(slug=slug)
+                if article:
+                    skip = request.POST.get('skip')
+                    if skip and skip.isnumeric():
+                        skip_n = int(skip)
+                        return JsonResponse({'is_ok': True, 'content': article[0].content.split(' ', skip_n)[skip_n]})
+                    return JsonResponse({'is_ok': True, 'content': article[0].content})
+    return JsonResponse({'is_ok': False})
+
+
 def articles_list(request):
     articles = Article.objects.all()
     page = request.GET.get('page')
     paginator = Paginator(articles, NEWS_PAGINATE_BY)
     articles = paginator.get_page(page)
-    context = {'articles': articles, 'transition': True}
+    context = {'articles': articles}
     return render(request, 'news/list.html', context)
+
+
+@login_required(login_url=reverse_lazy('accounts:login'))
+def articles_my_list(request):
+    articles = Article.objects.filter(author__user__username=request.user.username)
+    page = request.GET.get('page')
+    paginator = Paginator(articles, NEWS_PAGINATE_BY)
+    articles = paginator.get_page(page)
+    context = {'articles': articles}
+    return render(request, 'news/my_list.html', context)
 
 
 def search_list(request):
@@ -32,7 +58,7 @@ def search_list(request):
     page = request.GET.get('page')
     paginator = Paginator(articles, NEWS_PAGINATE_BY)
     articles = paginator.get_page(page)
-    context = {'articles': articles, 'q': q, 'transition': True}
+    context = {'articles': articles, 'q': q}
     return render(request, 'news/search.html', context)
 
 
@@ -42,7 +68,7 @@ def article_detail(request, slug):
     comment_form = None
     if request.user.is_authenticated:
         comment_form = CommentForm()
-    context = {'article': article, 'comments': comments, 'comment_form': comment_form, 'default_avatar_path': DEFAULT_AVATAR_PATH, 'transition': True}
+    context = {'article': article, 'comments': comments, 'comment_form': comment_form, 'default_avatar_path': DEFAULT_AVATAR_PATH}
     return render(request, 'news/detail.html', context)
 
 
@@ -80,7 +106,7 @@ def article_create(request):
             return redirect('news:detail', article.slug)
     else:
         form = ArticleForm()
-    context = {'form': form, 'transition': True}
+    context = {'form': form}
     return render(request, 'news/create.html', context)
 
 
@@ -92,7 +118,7 @@ def article_edit(request, slug):
         if request.method == 'POST' and form.is_valid():
             form.save()
             return redirect('news:detail', slug)
-        context = {'article': article, 'form': form, 'transition': True}
+        context = {'article': article, 'form': form}
         return render(request, 'news/edit.html', context)
     else:
         raise PermissionDenied

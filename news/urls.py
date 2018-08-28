@@ -8,8 +8,10 @@ app_name = 'news'
 
 urlpatterns = [
     path('', views.articles_list, name='list'),
+    path('my/', views.articles_my_list, name='my'),
     path('search/', views.search_list, name='search'),
     path('create/', views.article_create, name='create'),
+    path('get_article/', views.get_article_async, name='get_article'),
     path('<slug:slug>/', views.article_detail, name='detail'),
     path('<slug:slug>/edit/', views.article_edit, name='edit'),
     path('<slug:slug>/delete/', views.article_delete, name='delete'),

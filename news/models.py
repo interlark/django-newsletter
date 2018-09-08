@@ -78,5 +78,5 @@ def create_slug(instance, new_slug=None, counter=2):
 
 @receiver(pre_save, sender=Article)
 def article_on_pre_save(sender, instance, *args, **kwargs):
-    if not instance.slug: # Запрещаем менять пулю опубликованной статьи
+    if not instance.slug:  # Запрещаем менять пулю опубликованной статьи
         instance.slug = create_slug(instance)

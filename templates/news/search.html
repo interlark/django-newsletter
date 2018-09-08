@@ -13,38 +13,46 @@
                     <i class="fa fa-search"></i>
                 </button>
             </div>
-         </div>
+        </div>
     </form>
 
     {% if articles %}
 
-    {% for article in articles %}
-        <div class="bg-white shadow rounded p-4 mt-4">
-            <h3><a href="{% url 'news:detail' article.slug %}">{{ article.title }}</a></h3>
-            <a class="d-inline-block link-muted small" href="{% url 'accounts:detail' article.author.id %}"><i class="fa fa-user fa-fw"></i>{{ article.author.user.profile.fio_name }}</a>
-            <div class="d-inline-block ml-2 text-muted small"><i class="fa fa-calendar fa-fw"></i>{{ article.date }}</div>
-            <hr class="mt-0"/>
-            <div class="lead">{{ article.content | linebreaks }}</div>
-        </div>
-    {% endfor %}
+        {% for article in articles %}
+            <div class="bg-white shadow rounded p-4 mt-4">
+                <h3><a href="{% url 'news:detail' article.slug %}">{{ article.title }}</a></h3>
+                <a class="d-inline-block link-muted small" href="{% url 'accounts:detail' article.author.id %}"><i
+                        class="fa fa-user fa-fw"></i>{{ article.author.user.profile.fio_name }}</a>
+                <div class="d-inline-block ml-2 text-muted small"><i class="fa fa-calendar fa-fw"></i>{{ article.date }}
+                </div>
+                <hr class="mt-0"/>
+                <div class="lead">{{ article.content | linebreaks }}</div>
+            </div>
+        {% endfor %}
 
-    <nav>
-        <ul class="pagination pagination-lg justify-content-center my-5">
-            <li class="page-item{% if not articles.has_previous %} disabled{% endif %}">
-                <a href="?page={% if articles.has_previous %}{{ articles.previous_page_number }}{% else %}1{% endif %}{% if q %}&q={{ q }}{% endif %}" class="page-link" aria-label="Назад">
-                    <span aria-hidden="true">«</span>
-                </a>
-            </li>
-            {% for page_number in articles.paginator.page_range %}
-                <li class="page-item{% if articles.number == page_number %} active{% endif %}"><a href="?page={{ page_number }}{% if q %}&q={{ q }}{% endif %}" class="page-link">{{ page_number }}</a></li>
-            {% endfor %}
-            <li class="page-item{% if not articles.has_next %} disabled{% endif %}">
-                <a href="?page={% if articles.has_next %}{{ articles.next_page_number }}{% else %}{{ articles.paginator.num_pages }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="page-link" aria-label="Вперед">
-                    <span aria-hidden="true">»</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+        <nav>
+            <ul class="pagination pagination-lg justify-content-center my-5">
+                <li class="page-item{% if not articles.has_previous %} disabled{% endif %}">
+                    <a href="?page=
+                            {% if articles.has_previous %}{{ articles.previous_page_number }}{% else %}1{% endif %}{% if q %}&q={{ q }}{% endif %}"
+                       class="page-link" aria-label="Назад">
+                        <span aria-hidden="true">«</span>
+                    </a>
+                </li>
+                {% for page_number in articles.paginator.page_range %}
+                    <li class="page-item{% if articles.number == page_number %} active{% endif %}"><a
+                            href="?page={{ page_number }}{% if q %}&q={{ q }}{% endif %}"
+                            class="page-link">{{ page_number }}</a></li>
+                {% endfor %}
+                <li class="page-item{% if not articles.has_next %} disabled{% endif %}">
+                    <a href="?page=
+                            {% if articles.has_next %}{{ articles.next_page_number }}{% else %}{{ articles.paginator.num_pages }}{% endif %}{% if q %}&q={{ q }}{% endif %}"
+                       class="page-link" aria-label="Вперед">
+                        <span aria-hidden="true">»</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
     {% else %}
         <h1 class="my-5 text-uppercase">Не найдено</h1>

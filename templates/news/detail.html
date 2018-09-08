@@ -5,23 +5,26 @@
 
 {% block content %}
     <div class="article bg-white shadow rounded p-4 mt-4">
-    {% if article.poster %}
-        <img src='{{ article.poster.url }}' class='mx-auto d-block mw-100 mb-3 rounded' />
-    {% endif %}
-        <div class="lead">{{ article.content | linebreaks}}</div>
+        {% if article.poster %}
+            <img src='{{ article.poster.url }}' class='mx-auto d-block mw-100 mb-3 rounded'/>
+        {% endif %}
+        <div class="lead">{{ article.content | linebreaks }}</div>
         {% if user.is_authenticated %}
             {% if user == article.author.user or user.is_superuser %}
-            <div class="buttons alert clearfix">
-                <form action="{% url 'news:delete' article.slug %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-danger pull-right ml-3"><i class="fa fa-trash fa-fw"></i>Удалить</button>
-                </form>
-                <a class="btn btn-primary pull-right" href="{% url 'news:edit' article.slug %}"><i class="fa fa-pencil fa-fw"></i>Редактировать</a>
-            </div>
+                <div class="buttons alert clearfix">
+                    <form action="{% url 'news:delete' article.slug %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger pull-right ml-3"><i class="fa fa-trash fa-fw"></i>Удалить
+                        </button>
+                    </form>
+                    <a class="btn btn-primary pull-right" href="{% url 'news:edit' article.slug %}"><i
+                            class="fa fa-pencil fa-fw"></i>Редактировать</a>
+                </div>
             {% endif %}
         {% endif %}
         <hr class="mb-0"/>
-        <a class="d-inline-block link-muted small" href="{% url 'accounts:detail' article.author.id %}"><i class="fa fa-user fa-fw"></i>{{ article.author.user.profile.fio_name }}</a>
+        <a class="d-inline-block link-muted small" href="{% url 'accounts:detail' article.author.id %}"><i
+                class="fa fa-user fa-fw"></i>{{ article.author.user.profile.fio_name }}</a>
         <div class="d-inline-block ml-2 text-muted small"><i class="fa fa-calendar fa-fw"></i>{{ article.date }}</div>
     </div>
     {% include 'news/comments.html' %}

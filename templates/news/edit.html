@@ -7,14 +7,15 @@
 {% block content %}
     <div class="site-form bg-white shadow rounded p-4 mt-4">
         <div class="clearfix">
-                <form action="{% url 'news:edit' article.slug %}" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {% bootstrap_form form %}
-                    {% buttons %}
+            <form action="{% url 'news:edit' article.slug %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% buttons %}
                     <input class="btn btn-success pull-right" type="submit" value="Сохранить"/>
-                    {% endbuttons %}
-                </form>
-                <a class="btn btn-secondary pull-left" href="{% url 'news:detail' article.slug %}"><i class="fa fa-chevron-left fa-fw"></i>Назад</a>
+                {% endbuttons %}
+            </form>
+            <a class="btn btn-secondary pull-left" href="{% url 'news:detail' article.slug %}"><i
+                    class="fa fa-chevron-left fa-fw"></i>Назад</a>
         </div>
     </div>
 {% endblock %}

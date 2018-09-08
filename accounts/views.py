@@ -28,7 +28,7 @@ def login(request):
 
 def logout(request):
     if request.method == 'POST':
-            logout_dj(request)
+        logout_dj(request)
     return redirect('news:list')
 
 
@@ -45,7 +45,7 @@ def signup(request):
             if 'next' in request.POST:
                 return redirect(request.POST.get('next'))
             else:
-                return redirect('news:list') #account:profile_detail
+                return redirect('news:list')  # account:profile_detail
     else:
         user_form = UserCreationForm()
         profile_form = ProfileCreateForm()
@@ -87,7 +87,7 @@ def delete_profile(request, profile_id):
             profile.user.delete()
         else:
             raise PermissionDenied
-    return redirect('accounts:detail', profile_id)
+    return redirect('news:list')
 
 
 @login_required(login_url=reverse_lazy('accounts:login'))
@@ -107,7 +107,7 @@ def profile_change_password(request, profile_id):
             form = PasswordChangeForm(user=profile.user)
     else:
         raise PermissionDenied
-    context = {'form': form, 'profile': profile }
+    context = {'form': form, 'profile': profile}
     return render(request, 'accounts/change_password.html', context)
 
 

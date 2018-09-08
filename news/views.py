@@ -68,7 +68,8 @@ def article_detail(request, slug):
     comment_form = None
     if request.user.is_authenticated:
         comment_form = CommentForm()
-    context = {'article': article, 'comments': comments, 'comment_form': comment_form, 'default_avatar_path': DEFAULT_AVATAR_PATH}
+    context = {'article': article, 'comments': comments, 'comment_form': comment_form,
+               'default_avatar_path': DEFAULT_AVATAR_PATH}
     return render(request, 'news/detail.html', context)
 
 

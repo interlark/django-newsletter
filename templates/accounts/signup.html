@@ -11,10 +11,10 @@
             {% bootstrap_form user_form %}
             {% bootstrap_form profile_form %}
             {% if request.GET.next %}
-            <input type="hidden" name="next" value="{{ request.GET.next }}"/>
+                <input type="hidden" name="next" value="{{ request.GET.next }}"/>
             {% endif %}
             {% buttons %}
-            <input class="btn btn-primary" type="submit" value="Зарегистрироваться"/>
+                <input class="btn btn-primary" type="submit" value="Зарегистрироваться"/>
             {% endbuttons %}
         </form>
     </div>

@@ -43,10 +43,10 @@
                     success: function (data) {
                         if (data.is_ok) {
                             $p = $expand_lnk.parent().find('p');
-                            $p.text(function (_,content) {
+                            $p.text(function (_, content) {
                                 return content.slice(0, -1);
                             });
-                            $p.text(function (_,content) {
+                            $p.text(function (_, content) {
                                 return content + data.content;
                             });
                             $expand_lnk.remove();

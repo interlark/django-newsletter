@@ -54,3 +54,10 @@ a, a:hover, a:visited, a:focus {
   display: block;
   margin-bottom: 15px;
 }
+
+.bg-diagonal {
+  display: block;
+  background-color: #f3f3f3;
+  background-size: 10px 10px;
+  background-image: repeating-linear-gradient(45deg, #d7d7d755 0, #d7d7d755 1px, #f3f3f336 0, #f3f3f336 50%);
+}

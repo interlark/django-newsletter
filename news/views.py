@@ -13,16 +13,15 @@ from .forms import ArticleForm, CommentForm
 
 def get_article_async(request):
     if request.method == 'POST':
-        if request.is_ajax():
-            slug = request.POST.get('slug')
-            if slug:
-                article = Article.objects.filter(slug=slug)
-                if article:
-                    skip = request.POST.get('skip')
-                    if skip and skip.isnumeric():
-                        skip_n = int(skip)
-                        return JsonResponse({'is_ok': True, 'content': article[0].content.split(' ', skip_n)[skip_n]})
-                    return JsonResponse({'is_ok': True, 'content': article[0].content})
+        slug = request.POST.get('slug')
+        if slug:
+            article = Article.objects.filter(slug=slug)
+            if article:
+                skip = request.POST.get('skip')
+                if skip and skip.isnumeric():
+                    skip_n = int(skip)
+                    return JsonResponse({'is_ok': True, 'content': article[0].content.split(' ', skip_n)[skip_n]})
+                return JsonResponse({'is_ok': True, 'content': article[0].content})
     return JsonResponse({'is_ok': False})
 
 

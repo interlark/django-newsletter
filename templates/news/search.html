@@ -26,6 +26,9 @@
                 <div class="d-inline-block ml-2 text-muted small"><i class="fa fa-calendar fa-fw"></i>{{ article.date }}
                 </div>
                 <hr class="mt-0"/>
+                {% if article.poster %}
+                <img class="article-poster" src="../media/{{ article.poster }}"/>
+                {% endif %}
                 <div class="lead">{{ article.content | linebreaks }}</div>
             </div>
         {% endfor %}

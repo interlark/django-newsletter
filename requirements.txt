@@ -1,5 +1,4 @@
-Django==2.1.5
-django-bootstrap4==0.0.7
-Pillow==5.2.0
-pytz==2018.5
-Unidecode==1.0.22
+Django>=4.0
+django-bootstrap4>=0.0.7
+Pillow>=5.2.0
+Unidecode>=1.0.22

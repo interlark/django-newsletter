@@ -47,3 +47,10 @@ a, a:hover, a:visited, a:focus {
 .profile-buttons a, .profile-buttons form {
     margin-left: 10px;
 }
+
+.article-poster {
+  max-width: 100%;
+  margin: 0 auto;
+  display: block;
+  margin-bottom: 15px;
+}

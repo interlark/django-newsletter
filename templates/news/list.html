@@ -11,6 +11,9 @@
             <a class="d-inline-block link-muted small" href="{% url 'accounts:detail' article.author.id %}"><i class="fa fa-user fa-fw"></i>{{ article.author.user.profile.fio_name }}</a>
             <div class="d-inline-block ml-2 text-muted small"><i class="fa fa-calendar fa-fw"></i>{{ article.date }}</div>
             <hr class="mt-0"/>
+            {% if article.poster %}
+            <img class="article-poster" src="media/{{ article.poster }}"/>
+            {% endif %}
             <div class="lead">{{ article.content|truncatewords:100|linebreaks }} {%  if article.content|wordcount > 100 %}
                 <a class="expand" data-slug="{{ article.slug }}" data-skip="100" href="#">Показать все</a>
             {% endif %}</div>
